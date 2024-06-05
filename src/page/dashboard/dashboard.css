@@ -1,0 +1,38 @@
+.dashboard-container {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Increased width */
+    text-align: center;
+}
+.fullPage {
+     width: 100%;
+     height: 100vh;
+     display: flex;
+     flex-direction: column;
+     box-sizing:border-box;
+ }
+
+.bgImg {
+    background-image: url('../../../public/backg.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.row-center {
+    justify-content: center;
+}
+
+.bgGradient {
+    background: linear-gradient(to right, #f6e1e1 0%, #CCE3FF 100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+.col-center {
+    align-items: center;
+}
