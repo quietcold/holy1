@@ -1,0 +1,38 @@
+/* SurveyHistory.css */
+.survey-history-container .sidebar {
+    width: 200px;
+    background-color: rgba(248, 249, 250, 0.9);
+    padding: 20px;
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+}
+
+.survey-history-container .sidebar h3 {
+    margin: 0 0 20px;
+    text-align: center;
+}
+
+.survey-history-container .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.survey-history-container .sidebar li {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 5px 0;
+}
+
+.survey-history-container .content {
+    margin-left: 220px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    overflow-y: auto;
+    width: 100%;
+    width: 800px;
+}
