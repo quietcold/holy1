@@ -4,13 +4,15 @@ import {Button, Checkbox, Form, Input, message} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import "./login.css"
 
+
+
 const login = async (username, password) => {
-    const response = await fetch('http://110.64.89.20:8080/User/Login', {
+    const response = await fetch('http://110.64.89.20:8080/User/Login?UserName=1&PassWord=1', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: JSON.stringify({ username, password })
+        // body: JSON.stringify({ username, password })
     });
 
     if (!response.ok) {
@@ -26,6 +28,7 @@ function Login() {
 
     const onFinish = (values) => {
         console.log('login form:', values);
+        const url = new URL('http://110.64.89.20:8080/User/Login?username=1&passsword=1');
         login(values.username, values.password)
             .then((response) => {
                 if (response.data.id) {
