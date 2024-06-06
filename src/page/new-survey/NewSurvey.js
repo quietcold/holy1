@@ -1,14 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useState,useRef,useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 import SingleChoiceQuestion from '../../component/SingleChoice';
 import MultipleChoiceQuestion from '../../component/MultipleChoice';
 import TextQuestion from '../../component/TextQuestion';
 import './NewSurvey.css';
-import {Button, Flex, Input, Layout, Menu} from "antd";
-import {Content, Header} from "antd/es/layout/layout";
-import Sider from "antd/es/layout/Sider";
-import {Footer} from "antd/es/modal/shared";
-import {UserOutlined} from "@ant-design/icons";
+import {Button, Flex, Input} from "antd";
 
 const NewSurvey = () => {
     const [surveyName, setSurveyName] = useState('');
@@ -19,7 +15,7 @@ const NewSurvey = () => {
 
     const addQuestion = (type) => {
         const questionType = type === 'SingleChoice' ? '单选题' : type === 'MultipleChoice' ? '多选题' : '填空题';
-        setQuestions([...questions, { id: Date.now(), type, questionType, topic: '', options: [], answer: '' }]);
+        setQuestions([...questions, {id: Date.now(), type, questionType, topic: '', options: [], answer: ''}]);
     };
 
     const deleteQuestion = (id) => {
@@ -82,36 +78,52 @@ const NewSurvey = () => {
     const renderQuestion = (question, index) => {
         switch (question.type) {
             case 'SingleChoice':
-                return <SingleChoiceQuestion key={question.id} id={question.id} number={index + 1} questionType={question.questionType} deleteQuestion={deleteQuestion} />;
+                return <SingleChoiceQuestion key={question.id} id={question.id} number={index + 1}
+                                             questionType={question.questionType} deleteQuestion={deleteQuestion}/>;
             case 'MultipleChoice':
-                return <MultipleChoiceQuestion key={question.id} id={question.id} number={index + 1} questionType={question.questionType} deleteQuestion={deleteQuestion} />;
+                return <MultipleChoiceQuestion key={question.id} id={question.id} number={index + 1}
+                                               questionType={question.questionType} deleteQuestion={deleteQuestion}/>;
             case 'Text':
-                return <TextQuestion key={question.id} id={question.id} number={index + 1} questionType={question.questionType} deleteQuestion={deleteQuestion} />;
+                return <TextQuestion key={question.id} id={question.id} number={index + 1}
+                                     questionType={question.questionType} deleteQuestion={deleteQuestion}/>;
             default:
                 return null;
         }
     };
+    const messagesEndRef = useRef(null);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [questions]);
     return (
         <Flex className="bgGradient">
             <div className="sidebar">
                 <h3>选择您要添加的题目：</h3>
                 <Flex vertical gap='large'>
-                    <Button onClick={() => addQuestion('SingleChoice')} style={{height: '50px', width: "auto",fontSize:'large'}}>添加单选题</Button>
-                    <Button onClick={() => addQuestion('MultipleChoice')} style={{height: '50px', width: "auto",fontSize:'large'}}>添加多选题</Button>
-                    <Button onClick={() => addQuestion('Text')} style={{height: '50px', width: "auto",fontSize:'large'}}s>添加填空题</Button>
+                    <Button onClick={() => addQuestion('SingleChoice')}
+                            style={{height: '50px', width: "auto", fontSize: 'large'}}>添加单选题</Button>
+                    <Button onClick={() => addQuestion('MultipleChoice')}
+                            style={{height: '50px', width: "auto", fontSize: 'large'}}>添加多选题</Button>
+                    <Button onClick={() => addQuestion('Text')}
+                            style={{height: '50px', width: "auto", fontSize: 'large'}} s>添加填空题</Button>
                 </Flex>
             </div>
             <div className="content">
-                <Input  placeholder="请输入问卷名字" onChange={(e) => setSurveyName(e.target.value)} className="survey-name-input"/>
+                <div>
+                    <Input placeholder="请输入问卷名字" onChange={(e) => setSurveyName(e.target.value)}
+                           className="survey-name-input"/>
+                </div>
                 <div className='questionlist'>
                     {questions.map((question, index) => (
                         <div key={question.id} id={`question-${question.id}`} className="question">
                             {renderQuestion(question, index)}
                         </div>
                     ))}
+                    <div ref={messagesEndRef} />
                 </div>
                 {questions.length > 0 && (
-                    <Button onClick={handleCreateComplete} className="create-complete-button">创建完成</Button>
+                    <Button type="primary" size='large' onClick={handleCreateComplete}
+                            className="create-complete-button">创建完成</Button>
                 )}
                 {showConfirm && (
                     <div className="confirm-dialog">

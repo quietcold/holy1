@@ -3,16 +3,48 @@ import {useNavigate} from 'react-router-dom';
 import {
     Button,
     Form,
-    Input,
+    Input, message,
 } from 'antd';
 import "./register.css"
+
+const signup = async (username, password) => {
+    const response = await fetch('http://110.64.89.20:8080/User/Signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+    });
+
+    if (!response.ok) {
+        throw new Error(`Sign up failed with status ${response.status}`);
+    }
+
+    return await response.json();
+};
 
 function Register() {
     const [form] = Form.useForm();
     const navigate = useNavigate();
+    const [messageApi] = message.useMessage();
     const onFinish = (values) => {
-        console.log('Received values of form: ', values);
-        navigate('/dashboard')
+        console.log('Register form: ', values);
+        signup(values.username, values.password)
+            .then((response) => {
+                if (response.data.id) {
+                    messageApi.open({
+                        type: 'success',
+                        content: '注册成功',
+                    });
+                    navigate('/dashboard');
+                } else {
+                    messageApi.open({
+                        type: 'error',
+                        content: '注册失败：用户名或密码无效',
+                    });
+                    console.log(response)
+                }
+            })
     };
     return (
         <div className="fullPage row-center col-center bgGradient">
@@ -26,7 +58,7 @@ function Register() {
                     size="large"
                 >
                     <Form.Item
-                        name="usename"
+                        name="username"
                         label="用户名"
                         rules={[
                             {

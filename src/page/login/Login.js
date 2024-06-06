@@ -1,43 +1,47 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import {Button, Checkbox, Form, Input} from 'antd';
+import {Button, Checkbox, Form, Input, message} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import "./login.css"
 
+const login = async (username, password) => {
+    const response = await fetch('http://110.64.89.20:8080/User/Login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+    });
+
+    if (!response.ok) {
+        throw new Error(`Login failed with status ${response.status}`);
+    }
+
+    return await response.json();
+};
 
 function Login() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [loginStatus, setLoginStatus] = useState(null);
+    const [messageApi, contextHolder] = message.useMessage();
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        // 发送请求到后端 API
-        const response = await fetch('http://127.0.0.1:4523/m1/4584133-4233190-default/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({username, password}),
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.id) {
-            // 登录成功
-            setLoginStatus('登录成功');
-            setTimeout(() => {
-                navigate('/dashboard'); // 导航到控制面板页面
-            }, 1000);
-        } else {
-            // 登录失败
-            setLoginStatus('登录失败：用户名或密码无效');
-        }
-    };
     const onFinish = (values) => {
-        console.log('Success:', values);
+        console.log('login form:', values);
+        login(values.username, values.password)
+            .then((response) => {
+                if (response.data.id) {
+                    messageApi.open({
+                        type: 'success',
+                        content: '登录成功',
+                    });
+                    navigate('/dashboard');
+                } else {
+                    messageApi.open({
+                        type: 'error',
+                        content: '登录失败：用户名或密码无效',
+                    });
+                    console.log(response)
+                }
+            })
     };
 
     return (

@@ -19,6 +19,8 @@
     border-radius: 20px;
     margin: 20px;
     padding: 0 30px;
+    display: flex;
+    flex-direction: column;
 }
 
 .success-message {
@@ -74,10 +76,10 @@
 }
 
 .survey-name-input {
-    margin: 20px 50px;
+    margin: 20px 0;
     padding: 10px;
     font-size: 16px;
-    border-radius: 5px;
+    border-radius: 10px;
     border: 1px solid #ccc;
     text-align: center;
     box-sizing: border-box;
@@ -85,6 +87,11 @@
 
 .survey-name-input::placeholder {
     text-align: center;
+}
+
+.create-complete-button {
+    width: fit-content;
+    margin: auto auto;
 }
 
 .confirm-dialog {
@@ -111,18 +118,18 @@
     cursor: pointer;
 }
 
-.questionlist{
-    margin: 0 30px;
+.questionlist {
+    padding: 0 30px;
     height: 70vh;
     overflow: scroll;
 }
 
 .question {
     background-color: #f9f9f9;
-    padding: 40px;
+    padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     box-sizing: border-box;
 }
@@ -134,43 +141,3 @@
     margin-bottom: 10px;
 }
 
-.question-info {
-    flex: 1;
-    text-align: left;
-}
-
-.question-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-.delete-button,
-.add-option-button {
-    height: 50px;
-}
-
-.option-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-    position: relative;
-}
-
-.option-container input {
-    flex: 1;
-    padding-right: 10%;
-}
-
-.option-container button {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-83%);
-    height: 45px;
-    width: 10%;
-}
-
-.option-container:hover button {
-    display: inline;
-}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './SurveyHistory.css';
+import {Flex} from "antd";
 
 const SurveyHistory = () => {
     const [surveys, setSurveys] = useState([]);
@@ -23,7 +24,7 @@ const SurveyHistory = () => {
     }, []);
 
     return (
-        <div className="survey-history-container">
+        <Flex className="bgGradient">
             <div className="sidebar">
                 <h3>历史问卷</h3>
                 {surveys.length > 0 ? (
@@ -67,7 +68,7 @@ const SurveyHistory = () => {
                     <p>暂无历史问卷</p>
                 )}
             </div>
-        </div>
+        </Flex>
     );
 };
 

@@ -1,32 +1,29 @@
 import React, { useState } from 'react';
-import '../page/new-survey/NewSurvey.css';
+import {Button, Input} from "antd";
+import './question.css';
 
+const { TextArea } = Input;
 const TextQuestion = ({ id, number, questionType, deleteQuestion }) => {
     const [question, setQuestion] = useState('');
     const [answer, setAnswer] = useState('');
+
 
     return (
         <div className="question">
             <div className="question-header">
                 <span className="question-info">题号: {number} ({questionType})</span>
                 <div className="question-buttons">
-                    <button onClick={() => deleteQuestion(id)} className="delete-button">删除此题</button>
+                    <Button onClick={() => deleteQuestion(id)} className="delete-button">删除此题</Button>
                 </div>
             </div>
-            <input
+            <Input
                 type="text"
                 placeholder="在此输入您的问题"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                style={{ width: '100%', marginBottom: '10px' }}
+                style={{ width: '100%', height: "50px", marginBottom: '30px' }}
             />
-            <input
-                type="text"
-                placeholder="用户填写行"
-                value={answer}
-                readOnly // 将此输入框设置为只读
-                style={{ width: '100%', marginBottom: '10px' }}
-            />
+            <TextArea showCount maxLength={100} readOnly placeholder="用户填写行" />
         </div>
     );
 };
