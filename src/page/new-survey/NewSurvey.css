@@ -134,10 +134,5 @@
     box-sizing: border-box;
 }
 
-.question-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
+
 

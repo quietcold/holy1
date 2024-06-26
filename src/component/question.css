@@ -1,3 +1,10 @@
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 .question-info {
     flex: 1;
     text-align: left;
@@ -8,9 +15,11 @@
     gap: 10px;
 }
 
-.delete-button,
+.delete-button {
+    color: orangered;
+}
 .add-option-button {
-    height: 50px;
+    /*height: 50px;*/
 }
 
 .option-container {
@@ -22,7 +31,8 @@
 
 .option-container input {
     flex: 1;
-    padding-right: 10%;
+    margin-left: 2%;
+    width: 98%;
 }
 
 .option-container button {

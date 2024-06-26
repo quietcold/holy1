@@ -1,10 +1,11 @@
-import React, {useState,useRef,useEffect } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
-import SingleChoiceQuestion from '../../component/SingleChoice';
-import MultipleChoiceQuestion from '../../component/MultipleChoice';
-import TextQuestion from '../../component/TextQuestion';
+import {renderQuestion} from "../../component/renderQuestion";
 import './NewSurvey.css';
 import {Button, Flex, Input} from "antd";
+import {createqn} from "../../serve/createqn";
+
+var username = localStorage.getItem("username")
 
 const NewSurvey = () => {
     const [surveyName, setSurveyName] = useState('');
@@ -14,8 +15,13 @@ const NewSurvey = () => {
     const navigate = useNavigate();
 
     const addQuestion = (type) => {
-        const questionType = type === 'SingleChoice' ? '单选题' : type === 'MultipleChoice' ? '多选题' : '填空题';
-        setQuestions([...questions, {id: Date.now(), type, questionType, topic: '', options: [], answer: ''}]);
+        const className = type === 'SingleChoice' ? 'SingleChoice_Question' : type === 'MultipleChoice' ?
+            'MultipleChoice_Question' : 'GapFilling_Question';
+        // setQuestions([...questions, {id: Date.now(), questionType: className, topic: '', options: [], answer: ''}]);
+        setQuestions([...questions, {
+            id: Date.now(), className: className, topic: '', options: [], answer: '',
+            iSremark: false, iSrequired: true, precedingText: '', postText: ''
+        }]);
     };
 
     const deleteQuestion = (id) => {
@@ -30,42 +36,54 @@ const NewSurvey = () => {
         setShowConfirm(true);
     };
 
-    const handleSubmit = async () => {
-        const requestData = {
-            code: 200,
-            data: {
-                id: Date.now(),
-                questionNaireName: surveyName,
-                questionList: questions.map(q => ({
-                    className: q.className,
-                    topic: q.topic,
-                    options: q.type === 'SingleChoice' || q.type === 'MultipleChoice' ? q.options : undefined,
-                    answer: q.type === 'Text' ? q.answer : undefined
-                }))
-            },
-            msg: '创建问卷'
-        };
+    const handleSubmit = () => {
+        createqn(username, surveyName, questions).then(
+            (response) => {
+                if (response.data.code >= 0) {
+                    setSuccessMessage(true);
+                    setTimeout(() => {
+                        navigate('/survey-history');
+                    }, 2000);
+                } else {
+                    console.error('问卷提交失败');
+                }
+            })
 
-        try {
-            const response = await fetch('http://127.0.0.1:4523/m1/4584133-4233190-default/api/submitSurvey', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData)
-            });
-
-            if (response.ok) {
-                setSuccessMessage(true);
-                setTimeout(() => {
-                    navigate('/survey-history');
-                }, 2000);
-            } else {
-                console.error('问卷提交失败');
-            }
-        } catch (error) {
-            console.error('请求失败', error);
-        }
+        // const requestData = {
+        //     code: 200,
+        //     data: {
+        //         id: Date.now(),
+        //         questionNaireName: surveyName,
+        //         questionList: questions.map(q => ({
+        //             className: q.className,
+        //             topic: q.topic,
+        //             options: q.type === 'SingleChoice' || q.type === 'MultipleChoice' ? q.options : undefined,
+        //             answer: q.type === 'Text' ? q.answer : undefined
+        //         }))
+        //     },
+        //     msg: '创建问卷'
+        // };
+        //
+        // try {
+        //     const response = await fetch('http://127.0.0.1:4523/m1/4584133-4233190-default/api/submitSurvey', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify(requestData)
+        //     });
+        //
+        //     if (response.ok) {
+        //         setSuccessMessage(true);
+        //         setTimeout(() => {
+        //             navigate('/survey-history');
+        //         }, 2000);
+        //     } else {
+        //         console.error('问卷提交失败');
+        //     }
+        // } catch (error) {
+        //     console.error('请求失败', error);
+        // }
     };
 
     const handleConfirm = (confirmed) => {
@@ -75,26 +93,12 @@ const NewSurvey = () => {
         }
     };
 
-    const renderQuestion = (question, index) => {
-        switch (question.type) {
-            case 'SingleChoice':
-                return <SingleChoiceQuestion key={question.id} id={question.id} number={index + 1}
-                                             questionType={question.questionType} deleteQuestion={deleteQuestion}/>;
-            case 'MultipleChoice':
-                return <MultipleChoiceQuestion key={question.id} id={question.id} number={index + 1}
-                                               questionType={question.questionType} deleteQuestion={deleteQuestion}/>;
-            case 'Text':
-                return <TextQuestion key={question.id} id={question.id} number={index + 1}
-                                     questionType={question.questionType} deleteQuestion={deleteQuestion}/>;
-            default:
-                return null;
-        }
-    };
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
     }, [questions]);
+
     return (
         <Flex className="bgGradient">
             <div className="sidebar">
@@ -105,7 +109,7 @@ const NewSurvey = () => {
                     <Button onClick={() => addQuestion('MultipleChoice')}
                             style={{height: '50px', width: "auto", fontSize: 'large'}}>添加多选题</Button>
                     <Button onClick={() => addQuestion('Text')}
-                            style={{height: '50px', width: "auto", fontSize: 'large'}} s>添加填空题</Button>
+                            style={{height: '50px', width: "auto", fontSize: 'large'}}>添加填空题</Button>
                 </Flex>
             </div>
             <div className="content">
@@ -116,10 +120,10 @@ const NewSurvey = () => {
                 <div className='questionlist'>
                     {questions.map((question, index) => (
                         <div key={question.id} id={`question-${question.id}`} className="question">
-                            {renderQuestion(question, index)}
+                            {renderQuestion(question, index, deleteQuestion)}
                         </div>
                     ))}
-                    <div ref={messagesEndRef} />
+                    <div ref={messagesEndRef}/>
                 </div>
                 {questions.length > 0 && (
                     <Button type="primary" size='large' onClick={handleCreateComplete}
@@ -143,16 +147,3 @@ const NewSurvey = () => {
 };
 
 export default NewSurvey;
-
-
-
-
-
-
-
-
-
-
-
-
-

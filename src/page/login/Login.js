@@ -3,24 +3,24 @@ import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {Button, Checkbox, Form, Input, message} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import "./login.css"
+import {login} from "../../serve/login";
 
 
-
-const login = async (username, password) => {
-    const response = await fetch('http://110.64.89.20:8080/User/Login?UserName=1&PassWord=1', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        // body: JSON.stringify({ username, password })
-    });
-
-    if (!response.ok) {
-        throw new Error(`Login failed with status ${response.status}`);
-    }
-
-    return await response.json();
-};
+// const login = async (username, password) => {
+//     const response = await fetch('http://110.64.89.20:8080/User/Login?UserName=1&PassWord=1', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/x-www-form-urlencoded'
+//         },
+//         // body: JSON.stringify({ username, password })
+//     });
+//
+//     if (!response.ok) {
+//         throw new Error(`Login failed with status ${response.status}`);
+//     }
+//
+//     return await response.json();
+// };
 
 function Login() {
     const [messageApi, contextHolder] = message.useMessage();
@@ -28,16 +28,19 @@ function Login() {
 
     const onFinish = (values) => {
         console.log('login form:', values);
-        const url = new URL('http://110.64.89.20:8080/User/Login?username=1&passsword=1');
+        // login(values.username, values.password);
+        // const url = new URL('http://110.64.89.20:8080/User/Login?username=1&passsword=1');
         login(values.username, values.password)
             .then((response) => {
-                if (response.data.id) {
+                if (response.data >= 0) {
                     messageApi.open({
                         type: 'success',
                         content: '登录成功',
                     });
+                    localStorage.setItem("username", values.username)
                     navigate('/dashboard');
                 } else {
+                    alert('登录失败：用户名或密码无效')
                     messageApi.open({
                         type: 'error',
                         content: '登录失败：用户名或密码无效',

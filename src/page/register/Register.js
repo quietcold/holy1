@@ -6,22 +6,23 @@ import {
     Input, message,
 } from 'antd';
 import "./register.css"
+import {signup} from "../../serve/signup";
 
-const signup = async (username, password) => {
-    const response = await fetch('http://110.64.89.20:8080/User/Signup', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-    });
-
-    if (!response.ok) {
-        throw new Error(`Sign up failed with status ${response.status}`);
-    }
-
-    return await response.json();
-};
+// const signup = async (username, password) => {
+//     const response = await fetch('http://110.64.89.20:8080/User/Signup', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({ username, password })
+//     });
+//
+//     if (!response.ok) {
+//         throw new Error(`Sign up failed with status ${response.status}`);
+//     }
+//
+//     return await response.json();
+// };
 
 function Register() {
     const [form] = Form.useForm();
@@ -31,7 +32,7 @@ function Register() {
         console.log('Register form: ', values);
         signup(values.username, values.password)
             .then((response) => {
-                if (response.data.id) {
+                if (response.data >= 0) {
                     messageApi.open({
                         type: 'success',
                         content: '注册成功',

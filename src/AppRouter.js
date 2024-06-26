@@ -6,6 +6,7 @@ import Register from "./page/register/Register";
 import Dashboard from "./page/dashboard/Dashboard";
 import NewSurvey from "./page/new-survey/NewSurvey";
 import SurveyHistory from "./page/survey-history/SurveyHistory";
+import Questionnair from "./page/questionnaire/Questionnaire";
 
 function AppRouter() {
     return (
@@ -17,6 +18,7 @@ function AppRouter() {
                 <Route path="/dashboard" element={<Dashboard/>}/>
                 <Route path="/new-survey" element={<NewSurvey/>}/>
                 <Route path="/survey-history" element={<SurveyHistory/>}/>
+                <Route path="/questionnair" element={<Questionnair />} />
             </Routes>
         </Router>)
 }

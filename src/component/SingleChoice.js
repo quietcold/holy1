@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './question.css';
-import {Button, Input} from "antd";
+import {Button, Input, message} from "antd";
 
 const SingleChoice = ({ id, number, questionType, deleteQuestion }) => {
     const [options, setOptions] = useState(['']);
@@ -11,7 +11,12 @@ const SingleChoice = ({ id, number, questionType, deleteQuestion }) => {
     };
 
     const deleteOption = (index) => {
-        setOptions(options.filter((_, i) => i !== index));
+        if (options.length > 1) {
+            setOptions(options.filter((_, i) => i !== index));
+        }
+        else {
+            message.error( '单选题必须有一个或以上选项！',1);
+        }
     };
 
     const handleOptionChange = (value, index) => {
@@ -38,6 +43,7 @@ const SingleChoice = ({ id, number, questionType, deleteQuestion }) => {
             />
             {options.map((option, index) => (
                 <div key={index} className="option-container">
+                    {index + 1}:
                     <Input
                         type="text"
                         placeholder="在此输入您的选项"

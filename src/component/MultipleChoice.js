@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import './question.css';
-import {Button, Input} from "antd";
+import {Button, Input, message} from "antd";
 
 const MultipleChoice = ({ id, number, questionType, deleteQuestion }) => {
+    const [messageApi, contextHolder] = message.useMessage();
     const [options, setOptions] = useState(['', '']);
     const [question, setQuestion] = useState('');
 
@@ -13,7 +14,10 @@ const MultipleChoice = ({ id, number, questionType, deleteQuestion }) => {
     const deleteOption = (index) => {
         if (options.length > 2) {
             setOptions(options.filter((_, i) => i !== index));
-        }
+        } else {
+                message.error( '多选题必须有两个或以上选项！',1);
+            }
+
     };
 
     const handleOptionChange = (value, index) => {
@@ -40,6 +44,7 @@ const MultipleChoice = ({ id, number, questionType, deleteQuestion }) => {
             />
             {options.map((option, index) => (
                 <div key={index} className="option-container">
+                    {index + 1}:
                     <Input
                         type="text"
                         placeholder="在此输入您的选项"
@@ -54,11 +59,4 @@ const MultipleChoice = ({ id, number, questionType, deleteQuestion }) => {
 };
 
 export default MultipleChoice;
-
-
-
-
-
-
-
 
